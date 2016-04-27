@@ -1,16 +1,16 @@
-'use strict';
+Object.defineProperty(exports,"__esModule",{value:true});var _ramda=require('ramda');
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
+function createGesture(responder,transducer,getInitialLayout,draggable){
+return draggable.
+onDragStart.
+flatMap(function(){
+return responder(
+draggable.onDragMove,
+getInitialLayout).
 
-var _ramda = require('ramda');
+transduce(transducer).
+takeUntil(draggable.onDragRelease);});}
 
-function createGesture(responder, transducer, getInitialLayout, draggable) {
-  return draggable.onDragStart.flatMap(function () {
-    return responder(draggable.onDragMove, getInitialLayout).transduce(transducer).takeUntil(draggable.onDragRelease);
-  });
-};
+;exports.default=
 
-exports['default'] = (0, _ramda.curry)(createGesture);
-module.exports = exports['default'];
+(0,_ramda.curry)(createGesture);
