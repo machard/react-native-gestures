@@ -1,17 +1,17 @@
 import Rx from 'rx'
 
 export default function events (evs = []) {
-  var streams = evs.reduce(function (res, eventName) {
-    res[eventName] = new Rx.Subject()
-    return res
-  }, {})
 
   return {
     componentWillMount () {
-      Object.assign(this, streams)
+      this.streams = evs.reduce(function (res, eventName) {
+        res[eventName] = new Rx.Subject()
+        return res
+      }, {})
+      Object.assign(this, this.streams)
     },
     componentWillUnmount () {
-      evs.forEach((ev) => streams[ev].onCompleted())
+      evs.forEach((ev) => this.streams[ev].onCompleted())
     }
   }
 }

@@ -41,6 +41,8 @@ export default function genernalResponder (n, onMove, getInitialLayout) {
           let touches = event.touches
 
           if (touches.length === n) {
+            paused = false;
+
             touches = touches.map(toImmutableTouch)
             if (!state.get('initialLayout')) {
               state = state.withMutations(s => s

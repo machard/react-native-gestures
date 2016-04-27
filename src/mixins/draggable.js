@@ -30,7 +30,9 @@ export default function draggableMixin (gestureDefs) {
 
       let draggable = {
         onDragStart: onDragStart.filter(isCurrentTarget),
-        onDragMove: onDragMove.filter(isCurrentTarget),
+        onDragMove: onDragMove.filter(isCurrentTarget).map((evt) => {
+          return {...evt, touches: evt.touches.filter(touche => isCurrentTarget(touche))};
+        }),
         onDragRelease: onDragRelease.filter(isCurrentTarget)
       }
 
@@ -41,6 +43,8 @@ export default function draggableMixin (gestureDefs) {
         onMoveShouldSetPanResponderCapture: yes,
         onPanResponderGrant: (evt) => onDragStart.onNext(evt.nativeEvent),
         onPanResponderMove: (evt, gestureState) => onDragMove.onNext(evt.nativeEvent),
+        onPanResponderStart: (evt) => onDragMove.onNext(evt.nativeEvent),
+        onPanResponderEnd: (evt) => onDragMove.onNext(evt.nativeEvent),
         onPanResponderTerminationRequest: yes,
         onPanResponderRelease: (evt) => onDragRelease.onNext(evt.nativeEvent),
         onPanResponderTerminate: yes,
