@@ -19,6 +19,15 @@ export default function draggableMixin (gestureDefs) {
       let onDragMove = new Rx.Subject()
       let onDragRelease = new Rx.Subject()
 
+      let isTouchTakenIntoAccount = (touche) => {
+        var ok = isCurrentTarget(touche);
+
+        if (this.props.isTouchTakenIntoAccount)
+          ok = ok && this.props.isTouchTakenIntoAccount(touche);
+
+        return ok;
+      };
+
       this
         .onLayout
         .take(1)
@@ -31,7 +40,7 @@ export default function draggableMixin (gestureDefs) {
       let draggable = {
         onDragStart: onDragStart.filter(isCurrentTarget),
         onDragMove: onDragMove.filter(isCurrentTarget).map((evt) => {
-          return {...evt, touches: evt.touches.filter(touche => isCurrentTarget(touche))};
+          return {...evt, touches: evt.touches.filter(isTouchTakenIntoAccount)};
         }),
         onDragRelease: onDragRelease.filter(isCurrentTarget)
       }
