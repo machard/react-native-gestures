@@ -19,15 +19,6 @@ var onDragStart=new _rx2.default.Subject();
 var onDragMove=new _rx2.default.Subject();
 var onDragRelease=new _rx2.default.Subject();
 
-var isTouchTakenIntoAccount=function(touche){
-var ok=isCurrentTarget(touche);
-
-if(_this.props.isTouchTakenIntoAccount)
-ok=ok&&_this.props.isTouchTakenIntoAccount(touche);
-
-return ok;};
-
-
 this.
 onLayout.
 take(1).
@@ -40,7 +31,13 @@ subscribe(function(ev){return layout=ev.layout;});
 var draggable={
 onDragStart:onDragStart.filter(isCurrentTarget),
 onDragMove:onDragMove.filter(isCurrentTarget).map(function(evt){
-return _extends({},evt,{touches:evt.touches.filter(isTouchTakenIntoAccount)});}),
+var filteredTouches=evt.touches.filter(function(touche){return isCurrentTarget(touche);});
+if(_this.props.filterTouches)
+filteredTouches=_this.props.filterTouches(filteredTouches);
+return _extends({},
+evt,{
+touches:filteredTouches});}),
+
 
 onDragRelease:onDragRelease.filter(isCurrentTarget)};
 
