@@ -46,8 +46,14 @@ export default function draggableMixin (gestureDefs) {
         onPanResponderStart: (evt) => onDragMove.onNext(evt.nativeEvent),
         onPanResponderEnd: (evt) => onDragMove.onNext(evt.nativeEvent),
         onPanResponderTerminationRequest: yes,
-        onPanResponderRelease: (evt) => onDragRelease.onNext(evt.nativeEvent),
-        onPanResponderTerminate: yes,
+        onPanResponderRelease: (evt) => {
+          this.props.onRelease && this.props.onRelease();
+          onDragRelease.onNext(evt.nativeEvent);
+        },
+        onPanResponderTerminate: (evt) => {
+          this.props.onRelease && this.props.onRelease();
+          onDragRelease.onNext(evt.nativeEvent);
+        },
         onShouldBlockNativeResponder: yes
       })
 

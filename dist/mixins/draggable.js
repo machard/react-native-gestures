@@ -14,7 +14,7 @@ var getInitialLayout=function(){return layout;};
 var isCurrentTarget=function(ev){return ev.target===target;};
 
 return {
-componentWillMount:function(){
+componentWillMount:function(){var _this=this;
 var onDragStart=new _rx2.default.Subject();
 var onDragMove=new _rx2.default.Subject();
 var onDragRelease=new _rx2.default.Subject();
@@ -46,8 +46,14 @@ onPanResponderMove:function(evt,gestureState){return onDragMove.onNext(evt.nativ
 onPanResponderStart:function(evt){return onDragMove.onNext(evt.nativeEvent);},
 onPanResponderEnd:function(evt){return onDragMove.onNext(evt.nativeEvent);},
 onPanResponderTerminationRequest:yes,
-onPanResponderRelease:function(evt){return onDragRelease.onNext(evt.nativeEvent);},
-onPanResponderTerminate:yes,
+onPanResponderRelease:function(evt){
+_this.props.onRelease&&_this.props.onRelease();
+onDragRelease.onNext(evt.nativeEvent);},
+
+onPanResponderTerminate:function(evt){
+_this.props.onRelease&&_this.props.onRelease();
+onDragRelease.onNext(evt.nativeEvent);},
+
 onShouldBlockNativeResponder:yes});
 
 
