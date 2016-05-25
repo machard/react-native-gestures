@@ -7,14 +7,14 @@ function yes () { return true }
 export default function draggableMixin (gestureDefs) {
   gestureDefs = gestureDefs || []
 
-  var target
-  var layout
-
-  let getInitialLayout = () => layout
-  let isCurrentTarget = (ev) => ev.target === target
-
   return {
     componentWillMount () {
+      var target
+      var layout
+
+      let getInitialLayout = () => layout
+      let isCurrentTarget = (ev) => ev.target === target
+      
       let onDragStart = new Rx.Subject()
       let onDragMove = new Rx.Subject()
       let onDragRelease = new Rx.Subject()
@@ -63,13 +63,11 @@ export default function draggableMixin (gestureDefs) {
         onShouldBlockNativeResponder: yes
       })
 
-      if (this.props && this.props.gestures) {
-        gestureDefs = gestureDefs.concat(this.props.gestures)
-      }
+      this.gestureDefs = gestureDefs.concat((this.props && this.props.gestures) ? this.props.gestures : []);
 
       this.layoutStream = Rx
         .Observable
-        .merge(gestureDefs.map(def =>
+        .merge(this.gestureDefs.map(def =>
           create(def.responder, def.transducer, getInitialLayout, draggable)))
     }
   }

@@ -7,14 +7,14 @@ var _extends=Object.assign||function(target){for(var i=1;i<arguments.length;i++)
 draggableMixin;var _rx=require('rx');var _rx2=_interopRequireDefault(_rx);var _create=require('../create');var _create2=_interopRequireDefault(_create);var _reactNative=require('react-native');function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function yes(){return true;}function draggableMixin(gestureDefs){
 gestureDefs=gestureDefs||[];
 
+return {
+componentWillMount:function(){var _this=this;
 var target;
 var layout;
 
 var getInitialLayout=function(){return layout;};
 var isCurrentTarget=function(ev){return ev.target===target;};
 
-return {
-componentWillMount:function(){var _this=this;
 var onDragStart=new _rx2.default.Subject();
 var onDragMove=new _rx2.default.Subject();
 var onDragRelease=new _rx2.default.Subject();
@@ -63,11 +63,9 @@ onDragRelease.onNext(evt.nativeEvent);},
 onShouldBlockNativeResponder:yes});
 
 
-if(this.props&&this.props.gestures){
-gestureDefs=gestureDefs.concat(this.props.gestures);}
-
+this.gestureDefs=gestureDefs.concat(this.props&&this.props.gestures?this.props.gestures:[]);
 
 this.layoutStream=_rx2.default.
 Observable.
-merge(gestureDefs.map(function(def){return (
+merge(this.gestureDefs.map(function(def){return (
 (0,_create2.default)(def.responder,def.transducer,getInitialLayout,draggable));}));}};}
